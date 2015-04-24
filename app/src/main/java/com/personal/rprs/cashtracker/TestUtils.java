@@ -11,20 +11,19 @@ import java.util.Random;
 public class TestUtils {
 
     public static List<Transaction> CreateTransactions(int howMany) {
-        float minX = 50.00f;
-        float maxX = 100.00f;
-        float randomAmount;
-        Date randomDate = new Date();
+        double minX = 50.00;
+        double maxX = 100.00;
+        double randomAmount;
+        Date today = new Date();
         Random rand = new Random();
 
         List<Transaction> result = new ArrayList<>();
         for (int i = 0; i < howMany; i++) {
-            randomAmount = rand.nextFloat() * (maxX - minX) + minX;
-            randomDate.setTime(rand.nextInt());
+            randomAmount = rand.nextDouble() * (maxX - minX) + minX;
             result.add(new Transaction(
                     randomAmount,
-                    String.format("description...%d", i),
-                    randomDate,
+                    String.format("description... %d", i+1),
+                    today,
                     (i % 2 == 0),
                     (i % 3 == 0)));
         }

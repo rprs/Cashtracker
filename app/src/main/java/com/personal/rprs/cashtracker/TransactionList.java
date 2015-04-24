@@ -4,6 +4,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+
+import java.util.List;
 
 
 public class TransactionList extends ActionBarActivity {
@@ -12,6 +15,14 @@ public class TransactionList extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction_list);
+
+        final ListView listview = (ListView) findViewById(R.id.transactionlist);
+        List<Transaction> list = TestUtils.CreateTransactions(27);
+
+        TransactionListAdapter adapter = new TransactionListAdapter(this, list);
+        listview.setAdapter(adapter);
+
+
     }
 
 
@@ -36,4 +47,5 @@ public class TransactionList extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

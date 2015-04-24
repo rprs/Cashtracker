@@ -7,14 +7,14 @@ import java.util.Date;
  */
 public class Transaction {
 
-    public float amount;
+    public double amount;
     public String description;
     public Date date;
     public boolean cc;
     public boolean debtWithRoomie;
 
     public Transaction(
-            float inAmount,
+            double inAmount,
             String inDescription,
             Date inDate,
             boolean inCc,

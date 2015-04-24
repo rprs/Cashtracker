@@ -1,22 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight">
 
 
-    <TextView
+    <LinearLayout
         android:layout_width="0dp"
+        android:orientation="vertical"
         android:layout_height="wrap_content"
-        android:id="@+id/amount"
-        android:layout_weight="0.2"
-        android:text="123.12"/>
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/transaction_row_description"
+            android:text="description"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/transaction_row_date"
+            android:text="date"/>
+
+    </LinearLayout>
+
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/description"
-        android:layout_weight="1"
-        android:text="description"/>
+        android:id="@+id/transaction_row_amount"
+        android:gravity="right"
+        android:layout_weight="0.2"
+        android:text="123.12"/>
 
 </LinearLayout>
