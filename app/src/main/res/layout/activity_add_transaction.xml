@@ -20,10 +20,11 @@
             android:layout_row="0"
             android:layout_column="1"
             android:layout_columnWeight="1"
-
             android:hint="@string/activity_add_amount"
             android:imeOptions="actionNext"
-            android:inputType="numberDecimal"/>
+            android:inputType="numberDecimal"
+            android:id="@+id/layout_add_amount"/>
+
         <ImageView
             android:layout_row="1"
             android:layout_column="0"
@@ -35,7 +36,8 @@
             android:layout_columnWeight="1"
             android:hint="@string/activity_add_description"
             android:imeOptions="actionDone"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:id="@+id/layout_add_description"/>
     </GridLayout>
 
     <GridLayout
@@ -53,7 +55,8 @@
         <CheckBox
             android:layout_column="1"
             android:checked="true"
-            android:layout_columnWeight="1"/>
+            android:layout_columnWeight="1"
+            android:id="@+id/layout_add_cc"/>
 
         <TextView
             android:layout_column="2"
@@ -62,7 +65,8 @@
         <CheckBox
             android:layout_column="3"
             android:checked="false"
-            android:layout_columnWeight="1"/>
+            android:layout_columnWeight="1"
+            android:id="@+id/layout_add_roomie_debt"/>
     </GridLayout>
 
     <DatePicker
@@ -70,14 +74,15 @@
         android:layout_height="wrap_content"
         android:datePickerMode="spinner"
         android:calendarViewShown="false"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/layout_add_date"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:text="@string/activity_add_button_text"
-        android:onClick="addTransaction"/>
+        android:onClick="CollectNewTransactionData"/>
 
 
 

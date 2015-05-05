@@ -11,4 +11,12 @@
     <string name="activity_add_roomie">roomie</string>
     <string name="activity_add_button_text">Add</string>
     <string name="title_activity_add_transaction">AddTransaction</string>
+    <string name="error_add_transaction_empty_amount">Amount cannot be empty</string>
+    <string name="error_add_transaction_amount_too_many_decimals">Only allowed 2 decimals.</string>
+    <string name="error_add_transaction_empty_description">Description cannot be empty</string>
+    <string name="intent_amout_key">amountKey</string>
+    <string name="intent_description_key">descriptionKey</string>
+    <string name="intent_cc_key">ccKey</string>
+    <string name="intent_roomie_key">roomieKey</string>
+    <string name="intent_date_key">intent_date_key</string>
 </resources>

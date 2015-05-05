@@ -8,12 +8,16 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.Date;
 import java.util.List;
 
 
 public class TransactionList extends ActionBarActivity {
 
     static final int ADD_NEW_REQUEST = 1;
+    private List<Transaction> list;
+    private TransactionListAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,9 +25,9 @@ public class TransactionList extends ActionBarActivity {
 
 
         final ListView listview = (ListView) findViewById(R.id.transactionlist);
-        List<Transaction> list = TestUtils.CreateTransactions(3);
+        list = TestUtils.CreateTransactions(3);
 
-        TransactionListAdapter adapter = new TransactionListAdapter(this, list);
+        adapter = new TransactionListAdapter(this, list);
         listview.setAdapter(adapter);
 
     }
@@ -62,10 +66,15 @@ public class TransactionList extends ActionBarActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
-                String texto = extras.getString("key title");
-                Toast.makeText(this, texto, Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "New cancelled", Toast.LENGTH_SHORT).show();
+                double amount = extras.getDouble(getString(R.string.intent_amout_key));
+                String description = extras.getString(getString(R.string.intent_description_key));
+                boolean cc = extras.getBoolean(getString(R.string.intent_cc_key));
+                boolean roomie = extras.getBoolean(getString(R.string.intent_roomie_key));
+                Date date = new Date();
+                date.setTime(extras.getLong(getString(R.string.intent_date_key)));
+
+                list.add(new Transaction(amount, description, date, cc, roomie));
+                adapter.notifyDataSetChanged();
             }
         }
     }
