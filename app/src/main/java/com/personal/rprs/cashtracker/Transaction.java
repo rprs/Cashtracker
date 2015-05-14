@@ -1,11 +1,12 @@
 package com.personal.rprs.cashtracker;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Container for each transaction.
  */
-public class Transaction {
+public class Transaction implements Serializable {
 
     public double amount;
     public String description;

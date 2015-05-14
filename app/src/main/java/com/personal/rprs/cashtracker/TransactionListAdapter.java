@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * Created on 4/22/15.
+ * Class to create each row of the list layout.
  */
 public class TransactionListAdapter extends ArrayAdapter<Transaction> {
     private final Context context;
