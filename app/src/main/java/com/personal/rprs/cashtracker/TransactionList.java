@@ -2,24 +2,25 @@ package com.personal.rprs.cashtracker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 
 
 public class TransactionList extends ActionBarActivity {
@@ -37,6 +38,7 @@ public class TransactionList extends ActionBarActivity {
 
         final ListView listview = (ListView) findViewById(R.id.transactionlist);
         list = this.restoreOrCreateList();
+        this.sortTransactionList();
 
         adapter = new TransactionListAdapter(this, list);
         listview.setAdapter(adapter);
@@ -44,7 +46,7 @@ public class TransactionList extends ActionBarActivity {
     }
 
     private ArrayList<Transaction> restoreOrCreateList() {
-        ArrayList<Transaction> result = new ArrayList<Transaction>();
+        ArrayList<Transaction> result = new ArrayList<>();
         File file = new File(this.getFilesDir(), CASHTRACKER_FILENAME);
         FileInputStream fileIStream;
         ObjectInputStream objectIStream;
@@ -53,6 +55,7 @@ public class TransactionList extends ActionBarActivity {
             try {
                 fileIStream = new FileInputStream(file);
                 objectIStream = new ObjectInputStream(fileIStream);
+                // no idea to remove compile warning.
                 result = (ArrayList<Transaction>) objectIStream.readObject();
                 Log.d("CASHTRACKER", String.format("Deserialized Data. Items on list: %d",
                         result.size()));
@@ -66,7 +69,6 @@ public class TransactionList extends ActionBarActivity {
         }
         return result;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -88,11 +90,50 @@ public class TransactionList extends ActionBarActivity {
             startActivityForResult(addNew, TransactionList.ADD_NEW_REQUEST);
             return true;
         } else if (id == R.id.action_share) {
-            Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto", "", null));
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "##gastos##");
+            emailIntent.putExtra(Intent.EXTRA_TEXT, this.buildEmailBodyFromList());
+            startActivity(Intent.createChooser(emailIntent, "Select email app"));
             return true;
+        } else if (id == R.id.action_delete) {
+            Log.d("CASH_TRACKER", "deleting list.");
+            list.clear();
+            adapter.notifyDataSetChanged();
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private String buildEmailBodyFromList() {
+        StringBuilder body = new StringBuilder();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy");
+        for (Transaction t : list) {
+            /**
+             * Each row has the following structure in my file:
+             * - Amount
+             * - Date
+             * - Category
+             * - Group
+             * - Store
+             * - Description
+             * - cc
+             * - Month
+             * - Year
+             * - Debt with roomie
+             */
+
+            body.append(String.format("%1$,.2f;", t.amount));
+            body.append(String.format("%s;", sdf.format(t.date)));
+            body.append(" ; ; ;"); // Category; Group; Store;
+            body.append(String.format("%s;", t.description));
+            body.append(String.format("%d;", t.cc ? 1 : 0));
+            body.append(" ; ;"); // Month, Year
+            body.append(String.format("%d", t.debtWithRoomie ? 1 : 0));
+            body.append("\n");
+        }
+        return body.toString();
+    }
+
 
     /**
      * Function called when another activity returns a value.
@@ -119,12 +160,26 @@ public class TransactionList extends ActionBarActivity {
                 Date date = new Date();
                 date.setTime(extras.getLong(getString(R.string.intent_date_key)));
                 list.add(new Transaction(amount, description, date, cc, roomie));
+                this.sortTransactionList();
                 adapter.notifyDataSetChanged();
 
             }
         }
     }
 
+    private void sortTransactionList() {
+        Collections.sort(list, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction lhs, Transaction rhs) {
+                if (lhs.date.getTime() < rhs.date.getTime())
+                    return 1;
+                else if (lhs.date.getTime() == rhs.date.getTime())
+                    return 0;
+                else
+                    return -1;
+            }
+        });
+    }
     @Override
     protected void onStop() {
         super.onStop();
@@ -134,7 +189,7 @@ public class TransactionList extends ActionBarActivity {
             fileOStream = openFileOutput(CASHTRACKER_FILENAME, Context.MODE_PRIVATE);
             objectOStream = new ObjectOutputStream(fileOStream);
             objectOStream.writeObject(list);
-            Log.d("CASHTRACKER", "Saved file");
+            Log.d("CASH_TRACKER", "Saved file");
             objectOStream.close();
             fileOStream.close();
         } catch (IOException e) {

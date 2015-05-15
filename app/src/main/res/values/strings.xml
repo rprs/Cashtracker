@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">Cashtracker</string>
 
-    <string name="hello_world">Testing changes.</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_delete">Delete All</string>
     <string name="action_new">New</string>
     <string name="action_share">Share</string>
     <string name="activity_add_description">description</string>
